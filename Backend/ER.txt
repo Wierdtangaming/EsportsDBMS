@@ -1,0 +1,115 @@
+erDiagram
+    %% Entities
+    GAMES {
+        int game_id PK
+        string name
+        string description
+        string genre
+    }
+    
+    TOURNAMENTS {
+        int tournament_id PK
+        string name
+        int game_id FK
+        date start_date
+        date end_date
+        string location
+        decimal prize_pool
+        int venue_id FK 
+    }
+    
+    TEAMS {
+        int team_id PK
+        string name
+        string logo
+        string city_state
+        date createdDate
+    }
+    
+    TOURNAMENT_PARTICIPATION {
+        int participation_id PK
+        int tournament_id FK
+        int team_id FK
+        date registration_date
+        int seed
+        string status
+    }
+    
+    PLAYERS {
+        int player_id PK
+        string name
+        int team_id FK
+        string country
+        date date_of_birth
+        decimal rating
+    }
+    
+    MATCHES {
+        int match_id PK
+        int tournament_id FK
+        datetime match_date
+        string stage
+        text details
+        int round
+    }
+    
+    MATCH_TEAMS {
+        int record_id PK
+        int match_id FK
+        int team_id FK
+        int score
+        int total_points
+        boolean is_winner
+    }
+    
+    PLAYER_MATCH_STATS {
+        int stat_id PK
+        int match_id FK
+        int player_id FK
+        json game_stats
+    }
+    
+    VENUES {
+        int venue_id PK
+        string name
+        string address
+        int capacity
+    }
+    
+    PLAYER_TEAM_HISTORY {
+        int player_id FK
+        int team_id FK
+        date start_date
+        date end_date
+    }
+
+    LOGIN {
+        int login_id PK
+        string name
+        string password
+        string country
+        date date_of_birth
+        int team_id FK
+        int player_id FK
+    }
+
+    %% Relationships
+    GAMES ||--o{ TOURNAMENTS : "has" 
+    TOURNAMENTS ||--o{ MATCHES : "includes"
+    
+    PLAYERS ||--o{ PLAYER_TEAM_HISTORY : "has"
+    TEAMS ||--o{ PLAYERS : "comprises"
+    
+    TOURNAMENTS ||--o{ TOURNAMENT_PARTICIPATION : "has"
+    TEAMS ||--o{ TOURNAMENT_PARTICIPATION : "participates in"
+    
+    MATCHES ||--o{ MATCH_TEAMS : "features"
+    TEAMS ||--o{ MATCH_TEAMS : "competes in"
+    
+    MATCHES ||--o{ PLAYER_MATCH_STATS : "records"
+    PLAYERS ||--o{ PLAYER_MATCH_STATS : "generates"
+    
+    VENUES ||--o{ TOURNAMENTS : "hosted in"
+    
+    LOGIN ||--|| PLAYERS : "linked to"
+    LOGIN ||--|| TEAMS : "linked to"

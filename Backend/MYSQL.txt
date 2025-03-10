@@ -1,0 +1,61 @@
+mysql> show tables;
++-----------------------+
+| Tables_in_esportsdbms |
++-----------------------+
+| games                 |
+| login                 |
+| players               |
+| teams                 |
++-----------------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from games;
++---------+----------+-----------------------------------------------+---------+
+| game_id | name     | description                                   | genre   |
++---------+----------+-----------------------------------------------+---------+
+|       1 | Valorant | A tactical FPS shooter                        | Shooter |
+|       2 | Dota 2   | A multiplayer online battle arena (MOBA) game | MOBA    |
+|       3 | CS:GO    | A competitive first-person shooter            | Shooter |
+|       4 | FIFA 23  | A football simulation game                    | Sports  |
++---------+----------+-----------------------------------------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select * from login;
++----------+------------+-----------+------------+---------------+---------+-----------+
+| login_id | name       | password  | country    | date_of_birth | team_id | player_id |
++----------+------------+-----------+------------+---------------+---------+-----------+
+|       11 | JohnDoe123 | password1 | USA        | 1998-07-15    |       1 |         5 |
+|       12 | AliceS     | password2 | Canada     | 2000-03-22    |       2 |         6 |
+|       13 | BobJ       | password3 | India      | 1995-12-10    |       3 |         7 |
+|       14 | Tanmay     | password4 | India      | 2025-03-08    |       2 |         8 |
+|       15 | root       | Gatearray | aa         | 2025-03-06    |       1 |      NULL |
+|       16 | ABC        | ABC       | ABC        | 2025-03-13    |       2 |      NULL |
+|       17 | Abhijit    | abc       | india      | 2005-02-16    |       2 |         9 |
+|       18 | Abhijit2   | asdwdwd   | Ajlsdjkldw | 2025-03-27    |       3 |        10 |
++----------+------------+-----------+------------+---------------+---------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> select * from players;
++-----------+-------------+---------+------------+---------------+--------+
+| player_id | name        | team_id | country    | date_of_birth | rating |
++-----------+-------------+---------+------------+---------------+--------+
+|         5 | John Doe    |       1 | USA        | 1998-07-15    |   4.50 |
+|         6 | Alice Smith |       2 | Canada     | 2000-03-22    |   3.80 |
+|         7 | Bob Johnson |       3 | India      | 1995-12-10    |   4.20 |
+|         8 | Tanmay      |       2 | India      | 2025-03-08    |   0.00 |
+|         9 | Abhijit     |       2 | india      | 2005-02-16    |   0.00 |
+|        10 | Abhijit2    |       3 | Ajlsdjkldw | 2025-03-27    |   0.00 |
++-----------+-------------+---------+------------+---------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from teams;
++---------+------------+------------------------------------+------------------+-------------+
+| team_id | name       | logo                               | city_state       | createdDate |
++---------+------------+------------------------------------+------------------+-------------+
+|       1 | Team Alpha | https://example.com/alpha_logo.png | Mumbai, India    | 2018-05-12  |
+|       2 | Team Beta  | https://example.com/beta_logo.png  | New Delhi, India | 2019-07-20  |
+|       3 | Team Gamma | https://example.com/gamma_logo.png | Bangalore, India | 2020-11-03  |
++---------+------------+------------------------------------+------------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql>

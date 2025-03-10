@@ -1,0 +1,270 @@
+mysql> CREATE TABLE GAMES (
+    ->     game_id INT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     description VARCHAR(255),
+    ->     genre VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE TEAMS (
+    ->     team_id INT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     logo VARCHAR(255),
+    ->     city_state VARCHAR(255),
+    ->     createdDate DATE
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE VENUES (
+    ->     venue_id INT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     address VARCHAR(255),
+    ->     capacity INT
+    -> ) ;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> -- 2. Create tables that reference the above tables.
+mysql>
+mysql> CREATE TABLE TOURNAMENTS (
+    ->     tournament_id INT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     game_id INT,
+    ->     start_date DATE,
+    ->     end_date DATE,
+    ->     location VARCHAR(255),
+    ->     prize_pool DECIMAL(10,2),
+    ->     venue_id INT,
+    ->     FOREIGN KEY (game_id) REFERENCES GAMES(game_id),
+    ->     FOREIGN KEY (venue_id) REFERENCES VENUES(venue_id)
+    -> ) ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE PLAYERS (
+    ->     player_id INT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     team_id INT,
+    ->     country VARCHAR(100),
+    ->     date_of_birth DATE,
+    ->     rating DECIMAL(4,2),
+    ->     FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)
+    -> ) ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE PLAYER_TEAM_HISTORY (
+    ->     player_id INT,
+    ->     team_id INT,
+    ->     start_date DATE,
+    ->     end_date DATE,
+    ->     PRIMARY KEY (player_id, team_id, start_date),
+    ->     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id),
+    ->     FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)
+    -> ) ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE LOGIN (
+    ->     login_id INT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     password VARCHAR(255),
+    ->     country VARCHAR(100),
+    ->     date_of_birth DATE,
+    ->     team_id INT,
+    ->     player_id INT,
+    ->     FOREIGN KEY (team_id) REFERENCES TEAMS(team_id),
+    ->     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id)
+    -> ) ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE TOURNAMENT_PARTICIPATION (
+    ->     participation_id INT PRIMARY KEY,
+    ->     tournament_id INT,
+    ->     team_id INT,
+    ->     registration_date DATE,
+    ->     seed INT,
+    ->     status VARCHAR(50),
+    ->     FOREIGN KEY (tournament_id) REFERENCES TOURNAMENTS(tournament_id),
+    ->     FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)
+    -> ) ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE MATCHES (
+    ->     match_id INT PRIMARY KEY,
+    ->     tournament_id INT,
+    ->     match_date DATETIME,
+    ->     stage VARCHAR(100),
+    ->     details TEXT,
+    ->     round INT,
+    ->     FOREIGN KEY (tournament_id) REFERENCES TOURNAMENTS(tournament_id)
+    -> ) ;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> CREATE TABLE MATCH_TEAMS (
+    ->     record_id INT PRIMARY KEY,
+    ->     match_id INT,
+    ->     team_id INT,
+    ->     score INT,
+    ->     total_points INT,
+    ->     is_winner BOOLEAN,
+    ->     FOREIGN KEY (match_id) REFERENCES MATCHES(match_id),
+    ->     FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)
+    -> ) ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE PLAYER_MATCH_STATS (
+    ->     stat_id INT PRIMARY KEY,
+    ->     match_id INT,
+    ->     player_id INT,
+    ->     game_stats JSON,
+    ->     FOREIGN KEY (match_id) REFERENCES MATCHES(match_id),
+    ->     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id)
+    -> ) ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> -- Insert into GAMES
+mysql> INSERT INTO GAMES (game_id, name, description, genre) VALUES
+    -> (1, 'Valorant', 'Tactical shooter game popular worldwide', 'FPS'),
+    -> (2, 'Minecraft', 'Sandbox game with endless creativity', 'Sandbox'),
+    -> (3, 'Fortnite', 'Battle Royale game with fast-paced action', 'Battle Royale'),
+    -> (4, 'Overwatch', 'Team-based shooter with diverse heroes', 'FPS'),
+    -> (5, 'League of Legends', 'Competitive MOBA with strategic gameplay', 'MOBA');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into TEAMS (Indian teams)
+mysql> INSERT INTO TEAMS (team_id, name, logo, city_state, createdDate) VALUES
+    -> (1, 'Mumbai Mavericks', 'mumbai_mavericks.png', 'Mumbai, Maharashtra', '2020-01-01'),
+    -> (2, 'Delhi Dynamos', 'delhi_dynamos.png', 'New Delhi, Delhi', '2019-05-10'),
+    -> (3, 'Bangalore Blasters', 'bangalore_blasters.png', 'Bengaluru, Karnataka', '2018-07-15'),
+    -> (4, 'Chennai Challengers', 'chennai_challengers.png', 'Chennai, Tamil Nadu', '2021-03-20'),
+    -> (5, 'Kolkata Knights', 'kolkata_knights.png', 'Kolkata, West Bengal', '2022-08-30');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into VENUES (Indian venues)
+mysql> INSERT INTO VENUES (venue_id, name, address, capacity) VALUES
+    -> (1, 'Wankhede Stadium', 'D Road, Churchgate, Mumbai, Maharashtra', 33000),
+    -> (2, 'Jawaharlal Nehru Stadium', 'Gandhi Maidan, New Delhi, Delhi', 60000),
+    -> (3, 'M. Chinnaswamy Stadium', 'Stadium Road, Bengaluru, Karnataka', 40000),
+    -> (4, 'Eden Gardens', 'Maidan, Kolkata, West Bengal', 66000),
+    -> (5, 'MA Chidambaram Stadium', 'Chepauk, Chennai, Tamil Nadu', 50000);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into TOURNAMENTS (Indian tournaments)
+mysql> INSERT INTO TOURNAMENTS (tournament_id, name, game_id, start_date, end_date, location, prize_pool, venue_id) VALUES
+    -> (1, 'Valorant India Cup', 1, '2023-06-01', '2023-06-05', 'Mumbai, Maharashtra', 50000.00, 1),
+    -> (2, 'Minecraft Build-Off', 2, '2023-07-10', '2023-07-12', 'New Delhi, Delhi', 30000.00, 2),
+    -> (3, 'Fortnite Frenzy', 3, '2023-08-15', '2023-08-20', 'Bengaluru, Karnataka', 75000.00, 3),
+    -> (4, 'Overwatch Open', 4, '2023-09-05', '2023-09-10', 'Kolkata, West Bengal', 60000.00, 4),
+    -> (5, 'LoL Showdown', 5, '2023-10-20', '2023-10-25', 'Chennai, Tamil Nadu', 90000.00, 5);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into PLAYERS (Indian players)
+mysql> INSERT INTO PLAYERS (player_id, name, team_id, country, date_of_birth, rating) VALUES
+    -> (1, 'Arjun', 1, 'India', '1995-03-15', 4.50),
+    -> (2, 'Rahul', 2, 'UAE', '1997-07-22', 4.20),
+    -> (3, 'Vikram', 3, 'India', '1996-11-30', 4.70),
+    -> (4, 'Saanvi', 4, 'Sri Lanka', '1998-02-10', 4.30),
+    -> (5, 'Isha', 5, 'India', '1994-09-05', 4.60);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into PLAYER_TEAM_HISTORY
+mysql> INSERT INTO PLAYER_TEAM_HISTORY (player_id, team_id, start_date, end_date) VALUES
+    -> (1, 1, '2020-01-01', '2021-01-01'),
+    -> (2, 2, '2019-05-10', '2020-05-10'),
+    -> (3, 3, '2018-07-15', '2019-07-15'),
+    -> (4, 4, '2021-03-20', '2022-03-20'),
+    -> (5, 5, '2022-08-30', '2023-08-30'),
+    -> (5, 6, '2023-09-30', '2024-03-28');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`esportsdbms`.`player_team_history`, CONSTRAINT `player_team_history_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`team_id`))
+mysql>
+mysql>
+mysql> -- Insert into LOGIN (Indian player logins)
+mysql> INSERT INTO LOGIN (login_id, name, password, country, date_of_birth, team_id, player_id) VALUES
+    -> (1, 'arjun', 'password1', 'India', '1995-03-15', 1, 1),
+    -> (2, 'rahul', 'password2', 'India', '1997-07-22', 2, 2),
+    -> (3, 'vikram', 'password3', 'India', '1996-11-30', 3, 3),
+    -> (4, 'saanvi', 'password4', 'India', '1998-02-10', 4, 4),
+    -> (5, 'ishan', 'password5', 'India', '1994-09-05', 5, 5);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into TOURNAMENT_PARTICIPATION
+mysql> INSERT INTO TOURNAMENT_PARTICIPATION (participation_id, tournament_id, team_id, registration_date, seed, status) VALUES
+    -> (1, 1, 1, '2023-05-20', 1, 'registered'),
+    -> (2, 2, 2, '2023-06-15', 2, 'registered'),
+    -> (3, 3, 3, '2023-07-20', 3, 'registered'),
+    -> (4, 4, 4, '2023-08-25', 4, 'registered'),
+    -> (5, 5, 5, '2023-09-30', 5, 'registered');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into MATCHES (matches held in Indian cities)
+mysql> INSERT INTO MATCHES (match_id, tournament_id, match_date, stage, details, round) VALUES
+    -> (1, 1, '2023-06-02 15:00:00', 'Quarterfinal', '', 1),
+    -> (2, 2, '2023-07-11 16:00:00', 'Semifinal', '', 2),
+    -> (3, 3, '2023-08-16 17:00:00', 'Final', '', 3),
+    -> (4, 4, '2023-09-06 18:00:00', 'Group Stage', '', 1),
+    -> (5, 5, '2023-10-21 19:00:00', 'Final', '', 3);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into MATCH_TEAMS
+mysql> INSERT INTO MATCH_TEAMS (record_id, match_id, team_id, score, total_points, is_winner) VALUES
+    -> (1, 1, 1, 15, 150, TRUE),
+    -> (2, 1, 2, 10, 120, FALSE),
+    -> (3, 2, 3, 20, 200, TRUE),
+    -> (4, 2, 4, 12, 130, FALSE),
+    -> (5, 5, 5, 18, 180, TRUE),
+    -> (6, 5, 1, 13, 50, FALSE)
+    -> ;
+Query OK, 6 rows affected (0.00 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> -- Insert into PLAYER_MATCH_STATS
+mysql> INSERT INTO PLAYER_MATCH_STATS (stat_id, match_id, player_id, game_stats) VALUES
+    -> (1, 1, 1, '{"kills":10,"deaths":2}'),
+    -> (2, 2, 2, '{"kills":8,"deaths":3}'),
+    -> (3, 3, 3, '{"kills":15,"deaths":1}'),
+    -> (4, 4, 4, '{"kills":5,"deaths":4}'),
+    -> (5, 5, 5, '{"kills":12,"deaths":2}');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> show tables;
++--------------------------+
+| Tables_in_esportsdbms    |
++--------------------------+
+| games                    |
+| login                    |
+| match_teams              |
+| matches                  |
+| player_match_stats       |
+| player_team_history      |
+| players                  |
+| teams                    |
+| tournament_participation |
+| tournaments              |
+| venues                   |
++--------------------------+
+11 rows in set (0.00 sec)
